@@ -1,0 +1,11 @@
+Loading embedded config
+Starting Fuseki on port 42975
+Knowledge Endpoint: http://localhost:42975/knowledge
+Admin Endpoint: http://localhost:42975/admin
+debugtoolbar extension not available.
+Starting redis...
+Adding app to <whyis.autonomic.autonomic_setlr.SETLr object at 0x7f42475f9b10>
+Adding app to <whyis.autonomic.setl_maker.SETLMaker object at 0x7f42475f9990>
+Adding app to <whyis.autonomic.sdd_agent.SDDAgent object at 0x7f42475f9a20>
+True
+Cleaning up local config.
