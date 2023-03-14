@@ -1,6 +1,17 @@
 import numpy as np
 import pandas as pd
 import json
+# from pathlib import Path
+import os
+
+FILEDIR = os.path.dirname(os.path.abspath(__file__))
+
+# print('Absolute path of file:     ',
+#       os.path.abspath(__file__))
+# print('Absolute directoryname: ',
+#       os.path.dirname(os.path.abspath(__file__)))
+
+# print("Running Path:" + str(Path.cwd()))
 
 # dict pretty printer
 def pprint(text):
@@ -9,14 +20,18 @@ def pprint(text):
 
 # search for matching Mat, PST and return raw SE terms
 def find_gamma(mat, fil, refdf):
+    if fil is None:
+        fil = "no surface treatment"
     component = refdf['Component']
+    # print(f'component: {component}')
     gamma_d = refdf['Dispersive surface energy']
     gamma_p = refdf['Polar surface energy']
     g_d_m , g_d_f =0 , 0 
     for k , cpt in enumerate(component):
+        # print(f'cpt: {cpt}')
         if mat in cpt:
             g_d_m , g_p_m = gamma_d[k] , gamma_p[k]
-        elif fil in cpt:
+        if fil in cpt:
             g_d_f , g_p_f = gamma_d[k] , gamma_p[k]
     
     if g_d_m != 0 and g_d_f != 0:
@@ -48,15 +63,21 @@ def calc_work_terms(Gamma_d_matrix, Gamma_p_matrix, Gamma_d_filler, Gamma_p_fill
 
 def surface_energy_terms(Matrix, PST):
     # Import reference file
-    df = pd.read_excel('SE_raw_ref.xlsx')
+    # filename = FILEDIR + '/SE_raw_ref.xlsx'
+    # df = pd.read_excel(filename)
+    filename = FILEDIR + '/SE_raw_ref.csv'
+    df = pd.read_csv(filename)
+    # print("file read successful")
 
     # Find Raw SE vals (if match occurs)
     G = find_gamma(Matrix, PST, df)
-    if G is not False:
-        Gamma_d_matrix = G[0]
-        Gamma_p_matrix = G[1]
-        Gamma_d_filler = G[2]
-        Gamma_p_filler = G[3]
+    if G is False:
+        return False
+    
+    Gamma_d_matrix = G[0]
+    Gamma_p_matrix = G[1]
+    Gamma_d_filler = G[2]
+    Gamma_p_filler = G[3]
     Gamma_d_matrix = np.array([Gamma_d_matrix])
     Gamma_p_matrix = np.array([Gamma_p_matrix])
     Gamma_d_filler = np.array([Gamma_d_filler])
